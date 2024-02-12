@@ -1,0 +1,7 @@
+{
+  "ui:install": "npm install",
+  "ui:build": "npm run build",
+  "ui:watcher": "npm start",
+  "ui:test": "npm run test",
+  "ui:assets": "public"
+}
