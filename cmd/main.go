@@ -11,21 +11,22 @@ import (
 	"time"
 
 	"github.com/bubunyo/go-js-bindings/server"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
-	frontend := server.NewServer(server.Config{
+	frontend := server.NewServer2(server.Config{
 		Dir: "./ui",
 	})
 
 	frontend.Start()
 
-	mux.Handle("/ui", frontend)
+	mux.PathPrefix("/ui").Handler(frontend)
 
 	srv := &http.Server{
-		Addr:    ":5001",
+		Addr:    ":5004",
 		Handler: mux,
 	}
 

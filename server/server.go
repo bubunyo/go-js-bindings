@@ -38,16 +38,17 @@ func (s *Server) Start() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
-		p, err := GetFreePort()
-		if err != nil {
-			fmt.Println(">>>>>>>>>>>>>>>>> port", err)
-			return
-		}
+		// p, err := GetFreePort()
+		// if err != nil {
+		// 	fmt.Println(">>>>>>>>>>>>>>>>> port", err)
+		// 	return
+		// }
+		p := 3000
 		s.port = p
 		log.Println("got free port", s.port)
 		cmd := exec.Command("npm", "start")
 		cmd.Env = os.Environ()
-		cmd.Env = append(cmd.Env, fmt.Sprintf("PORT=%d BROWSER=none", p))
+		cmd.Env = append(cmd.Env, fmt.Sprintf("PORT=%d BROWSER=none PUBLIC_URL='http:localhost:3000/ui/'", p))
 		cmd.Dir = s.dir
 		pipe, _ := cmd.StdoutPipe()
 		errPipe, _ := cmd.StderrPipe()
@@ -77,9 +78,9 @@ func (s *Server) Start() {
 }
 
 func (s *Server) Stop() {
-	if err := s.proxy.conn.Close(); err != nil {
-		slog.Info(">>> failed to close connection", "folder", s.dir, "pid", s.process.Pid, "port", s.port)
-	}
+	// if err := s.proxy.conn.Close(); err != nil {
+	// 	slog.Info(">>> failed to close connection", "folder", s.dir, "pid", s.process.Pid, "port", s.port)
+	// }
 
 	if err := s.process.Kill(); err != nil {
 		slog.Info(">>> failed to kill server running", "folder", s.dir, "pid", s.process.Pid, "port", s.port)
@@ -123,6 +124,7 @@ func logOut(pipe io.ReadCloser) {
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(">>>>>>>>>>>>>>>.. print url", r.URL.String())
 	s.proxy.start(w, r)
 }
 
