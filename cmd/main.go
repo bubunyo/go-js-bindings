@@ -17,11 +17,9 @@ import (
 func main() {
 	mux := mux.NewRouter()
 
-	frontend := server.NewServer2(server.Config{
+	frontend := server.NewServer(server.Config{
 		Dir: "./ui",
 	})
-
-	frontend.Start()
 
 	mux.PathPrefix("/ui").Handler(frontend)
 
